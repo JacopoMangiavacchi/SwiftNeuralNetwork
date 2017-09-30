@@ -173,12 +173,66 @@ public struct Network {
      - Parameter ideal: What the output neurons should have yielded.
      */
     public mutating func calcError(ideal: [Double]) {
+        // clear hidden layer errors
+        for i in inputCount..<neuronCount {
+            error[i] = 0.0
+        }
+
+        // layer errors and deltas for output layer
+        for i in (inputCount + hiddenCount)..<neuronCount {
+            error[i] = ideal[i - inputCount - hiddenCount] - fire[i]
+            globalError += error[i] * error[i]
+            errorDelta[i] = error[i] * fire[i] * (1 - fire[i])
+        }
+
+        // hidden layer errors
+        var winx = inputCount * hiddenCount
+
+        for i in (inputCount + hiddenCount)..<neuronCount {
+            for j in 0..<hiddenCount {
+                let j2 = j + inputCount
+                accMatrixDelta[winx] += errorDelta[i] * fire[j2]
+                error[j2] += matrix[winx] * errorDelta[i]
+                winx += 1
+            }
+            accThresholdDelta[i] += errorDelta[i]
+        }
+
+        // hidden layer deltas
+        for i in 0..<hiddenCount {
+            let i2 = i + inputCount
+            errorDelta[i2] = error[i2] * fire[i2] * (1.0 - fire[i2])
+        }
+
+        // input layer errors
+        winx = 0  // offset into weight array
+        for i in 0..<hiddenCount {
+            let i2 = i + inputCount
+            for j in 0..<inputCount {
+                accMatrixDelta[winx] += errorDelta[i2] * fire[j]
+                error[j] += matrix[winx] * errorDelta[i2]
+                winx += 1
+            }
+            accThresholdDelta[i2] += errorDelta[i2]
+        }
     }
 
 
     /// Modify the weight matrix and thresholds based on the last call to calcError.
     public mutating func learn() {
+        // process the matrix
+        for i in 0..<matrix.count {
+            matrixDelta[i] = (learnRate * accMatrixDelta[i]) + (momentum * matrixDelta[i])
+            matrix[i] += matrixDelta[i]
+            accMatrixDelta[i] = 0
+        }
+
+        // process the thresholds
+        for i in inputCount..<neuronCount {
+            thresholdDelta[i] = learnRate * accThresholdDelta[i] + (momentum * thresholdDelta[i])
+            thresholds[i] += thresholdDelta[i]
+            accThresholdDelta[i] = 0
+        }
     }
 }
-
 
