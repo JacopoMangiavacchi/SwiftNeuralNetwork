@@ -129,9 +129,39 @@ public struct Network {
      - Returns: The results from the output neurons.
      */
     public mutating func computeOutputs(input: [Double]) -> [Double] {
+        for i in 0..<inputCount {
+            fire[i] = input[i]
+        }
+        
+        // first layer
+        var inx = 0
+        
+        for i in 0..<hiddenCount {
+            let i2 = i + inputCount
+            var sum = thresholds[i2]
+            
+            for j in 0..<inputCount {
+                sum += fire[j] * matrix[inx]
+                inx += 1
+            }
+            fire[i2] = threshold(sum: sum)
+        }
+
         // hidden layer
         var result = Array<Double>(repeating: 0.0, count: outputCount)
 
+        for i in (inputCount + hiddenCount)..<neuronCount {
+            var sum = thresholds[i]
+
+            for j in 0..<hiddenCount {
+                let j2 = j + inputCount
+                sum += fire[j2] * matrix[inx]
+                inx += 1
+            }
+            fire[i] = threshold(sum: sum)
+            
+            result[i - inputCount - hiddenCount] = fire[i]
+        }
 
         return result;
     }
