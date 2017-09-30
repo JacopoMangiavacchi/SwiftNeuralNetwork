@@ -123,6 +123,41 @@ public struct Network {
     
     
     /**
+      Convert to an Data buffer to be used for "memory" persistence of the neurons
+      (the weight and threshold values) be expressed as a linear array.
+     
+      - Returns: The memory of the neuron.
+     */
+    public func save() -> Data {
+//TODO: conversion
+//        double result[] = new double[matrix.length+thresholds.length];
+//        for (int i=0;i<matrix.length;i++)
+//            result[i] = matrix[i];
+//        for (int i=0;i<thresholds.length;i++)
+//            result[matrix.length+i] = thresholds[i];
+//        return result;
+        return Data()
+    }
+
+    
+    
+    /**
+     Convert from a Data buffer used for "memory" persistence of the neurons
+     (the weight and threshold values) be expressed as a linear array.
+     
+     - Parameter data: Data buffer for "memory" persistence of the neurons
+     */
+    public mutating func load(data: Data) {
+//TODO: conversion
+//        for (int i=0;i<matrix.length;i++)
+//            matrix[i] = array[i];
+//        for (int i=0;i<thresholds.length;i++)
+//            thresholds[i] = array[matrix.length+i];
+    }
+    
+    
+    
+    /**
      Returns the root mean square error for a complete training set.
      
      - Parameter len: The length of a complete training set.
