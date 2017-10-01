@@ -86,15 +86,23 @@ public struct Network {
         weightCount = (inputCount * hiddenCount) + (hiddenCount * outputCount)
         
         fire        = Array<Double>(repeating: 0.0, count: neuronCount)
-        matrix      = Array<Double>(repeating: 0.5 - drand48(), count: weightCount)
+        matrix      = Array<Double>(repeating: 0.0, count: weightCount)
         matrixDelta = Array<Double>(repeating: 0.0, count: weightCount)
-        thresholds  = Array<Double>(repeating: 0.5 - drand48(), count: neuronCount)
+        thresholds  = Array<Double>(repeating: 0.0, count: neuronCount)
         errorDelta  = Array<Double>(repeating: 0.0, count: neuronCount)
         error       = Array<Double>(repeating: 0.0, count: neuronCount)
         accThresholdDelta = Array<Double>(repeating: 0.0, count: neuronCount)
         accMatrixDelta = Array<Double>(repeating: 0.0, count: weightCount)
         thresholdDelta = Array<Double>(repeating: 0.0, count: neuronCount)
-    }
+
+        for i in 0..<weightCount {
+            matrix[i] = 0.5 - drand48()
+        }
+
+        for i in 0..<neuronCount {
+            thresholds[i] = 0.5 - drand48()
+        }
+}
     
     
     /**
