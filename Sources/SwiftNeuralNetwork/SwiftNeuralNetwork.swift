@@ -75,7 +75,7 @@ public struct Network {
      - Parameter learnRate: The learning rate to be used when training.
      - Parameter momentum: The momentum to be used when training.
      */
-    init(inputCount: Int, hiddenCount: Int, outputCount: Int, learnRate: Double, momentum: Double) {
+    public init(inputCount: Int, hiddenCount: Int, outputCount: Int, learnRate: Double, momentum: Double) {
         self.learnRate = learnRate
         self.momentum = momentum
         self.inputCount = inputCount
